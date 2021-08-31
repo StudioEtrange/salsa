@@ -1,8 +1,8 @@
 # Salsa
 
-* WIP - do not use YET*
+*WIP - do not use YET*
 
-A central tool to launch game servers
+A central tool to launch game servers on lin,ux
 
 ## install
 
@@ -20,7 +20,6 @@ cd salsa
 * pick a domain and set `TANGO_DOMAIN`
 * choose games to activate and set `TANGO_SERVICES_MODULES`
     * TANGO_SERVICES_MODULES=csgo vh
-    * see available games from pool/modules
 * configure a game server
     * override game settings section from `pool/modules/game.env` into `$HOME/salsa.env`
 
@@ -29,12 +28,21 @@ cd salsa
 ## commands
 
 ```
-./salsa info
-./salsa up
-./salsa down
-./salsa status
+./salsa info [--module <game id>]
+./salsa up [--module <game id>] [<game id>]
+./salsa down [--module <game id>] [<game id>]
+./salsa status  [--module <game id>] [<game id>]
 ```
 
+## supported servers
+
+* see available games from pool/modules or with `./salsa modules list`
+
+|Game|Salsa Game ID|
+|-|-|
+|7 days to die|sdtd|
+|Counter-Strike:Global Offensive|csgo|
+|Valheim|vh|
 
 ## monitoring API
 

@@ -25,11 +25,11 @@ services:
       - "${TANGO_INSTANCE_NAME}.managed=true"
       - "traefik.enable=true"
       # -------------- csgo -------------------------
-      # services : csgo
+      # services : csgo-tcp, csgo-udp
       - "traefik.tcp.services.csgo-tcp.loadbalancer.server.port=${CSGO_GAME_PORT}"
       - "traefik.udp.services.csgo-udp.loadbalancer.server.port=${CSGO_GAME_PORT}"
       # middlewares : csgo
-      # service router : csgo game tcp
+      # service router : csgo_service1 => csgo-tcp
       - "traefik.tcp.routers.csgo_service1.entrypoints=${CSGO_SERVICE1_ENTRYPOINTS}"
       - "traefik.tcp.routers.csgo_service1.rule=HostSNI(`csgo.${TANGO_DOMAIN}`)"
       #- "traefik.tcp.routers.csgo_service1.rule=HostSNI(`*`)"
@@ -37,7 +37,7 @@ services:
       - "traefik.tcp.routers.csgo_service1.tls=true"
       - "traefik.tcp.routers.csgo_service1.tls.domains[0].main=csgo.${TANGO_DOMAIN}"
       - "traefik.tcp.routers.csgo_service1.tls.passthrough=true"
-      # service router : csgo game udp
+      # service router : csgo_service2 => csgo-udp
       - "traefik.udp.routers.csgo_service2.entrypoints=${CSGO_SERVICE2_ENTRYPOINTS}"
       - "traefik.udp.routers.csgo_service2.service=csgo-udp"
       # service router middlewares : csgo
@@ -46,7 +46,7 @@ services:
       - "traefik.http.services.csgo_monitor.loadbalancer.server.port=28080"
       - "traefik.http.services.csgo_monitor.loadbalancer.server.scheme=http"
       - "traefik.http.services.csgo_monitor.loadbalancer.passhostheader=true"
-      # sub service router : csgo_monitor
+      # sub service router : csgo_monitor => csgo_monitor
       - "traefik.http.routers.csgo_monitor.entrypoints=${CSGO_MONITOR_ENTRYPOINTS}"
       - "traefik.http.routers.csgo_monitor.rule=HostRegexp(`csgo-monitor.${TANGO_DOMAIN}`)"
       - "traefik.http.routers.csgo_monitor.priority=${CSGO_MONITOR_PRIORITY}"

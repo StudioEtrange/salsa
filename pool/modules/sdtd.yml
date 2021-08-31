@@ -24,13 +24,13 @@ services:
       - LGSM_SERVERCFGFULLPATH=/home/linuxgsm/linuxgsm/lgsm/config-default/config-game/7DaysToDie/serverconfig.xml
       # Game settings
       # https://github.com/GameServerManagers/LinuxGSM/blob/master/lgsm/config-default/config-lgsm/sdtdserver/_default.cfg
-      - LGSM_PORT=${SDTD_GAME_PORT}
-      - LGSM_SERVER_VISIBILITY=2
-      - LGSM_SERVER_NAME=LGSM Salsa server
-      - LGSM_GAME_NAME=My Game
-      - LGSM_WORLD_GEN_SEED=ChangeMe
-      - LGSM_GAME_WORLD=RWG
-      - LGSM_SERVER_PASSWORD=salsa
+      # - LGSM_PORT=${SDTD_GAME_PORT}
+      # - LGSM_SERVER_VISIBILITY=2
+      # - LGSM_SERVER_NAME=LGSM Salsa server
+      # - LGSM_GAME_NAME=My Game
+      # - LGSM_WORLD_GEN_SEED=ChangeMe
+      # - LGSM_GAME_WORLD=RWG
+      # - LGSM_SERVER_PASSWORD=salsa
     labels:
       - "${TANGO_INSTANCE_NAME}.managed=true"
       - "traefik.enable=true"
