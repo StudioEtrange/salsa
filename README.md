@@ -28,10 +28,16 @@ cd salsa
 ## commands
 
 ```
-./salsa info [--module <game id>]
-./salsa up [--module <game id>] [<game id>]
-./salsa down [--module <game id>] [<game id>]
-./salsa status  [--module <game id>] [<game id>]
+./salsa info
+./salsa up [<game id>]
+./salsa down [<game id>]
+./salsa status [<game id>]
+```
+
+* Update/build linuxgsm-docker image. Usefull to update to its latest dockerfile version.
+
+```
+./salsa build-lgsm 
 ```
 
 ## supported servers

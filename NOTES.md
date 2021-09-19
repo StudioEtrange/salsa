@@ -11,3 +11,11 @@
     * gamedig : https://docs.linuxgsm.com/requirements/gamedig -- query game server
 
 * Docker ark server : https://github.com/DrPsychick/docker-linuxgsm-ark
+
+* Docker game servers : https://github.com/OpenSourceLAN/gameservers-docker
+
+* dos games in docker with js-dos : https://earthly.dev/blog/dos-gaming-in-docker/
+
+* docker + dosbox + vnc + websocket : 
+    * https://github.com/theonemule/dos-game
+    * https://www.wintellect.com/docker-fueled-nostalgia-building-a-retro-gaming-rig-on-kubernetes/

@@ -29,8 +29,10 @@ if [ ! -d "${TANGO_ROOT}" ]; then
     exit 1
 fi
 
-#../tango/tango info --app salsa --approot $(pwd)
-
-"${TANGO_ROOT}"/tango --app salsa --approot ${_CURRENT_FILE_DIR} $@
+if [ "$1" = "build-lgsm" ]; then
+    docker build -t studioetrange/linuxgsm-docker:latest https://github.com/StudioEtrange/linuxgsm-docker.git
+else
+    "${TANGO_ROOT}"/tango --app salsa --approot ${_CURRENT_FILE_DIR} $@
+fi
 
  
