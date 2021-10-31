@@ -32,7 +32,7 @@ fi
 if [ "$1" = "build-lgsm" ]; then
     docker build -t studioetrange/linuxgsm-docker:latest https://github.com/StudioEtrange/linuxgsm-docker.git
 else
-    "${TANGO_ROOT}"/tango --app salsa --approot ${_CURRENT_FILE_DIR} $@
+    "${TANGO_ROOT}/tango" --app salsa --approot ${_CURRENT_FILE_DIR} $@
 fi
 
  
