@@ -1,0 +1,70 @@
+
+volumes:
+  csgo_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${CSGO_DATA_PATH}
+    name: ${TANGO_CTX_NAME}_csgo_data
+
+services:
+  csgo:
+    image: studioetrange/linuxgsm-docker:latest
+    user: ${TANGO_USER_ID:-0}:${TANGO_GROUP_ID:-0}
+    container_name: ${TANGO_CTX_NAME}_csgo
+    depends_on: 
+      - service_init
+    restart: unless-stopped
+    environment:
+      # LGSM settings
+      - LGSM_GAMESERVERNAME=csgoserver
+      - LGSM_DEFAULT_CFG_DIRNAME=CounterStrikeGlobalOffensive
+      - LGSM_UPDATEINSTALLSKIP=AUTO
+    labels:
+      - "${TANGO_INSTANCE_NAME}.managed=true"
+      - "traefik.enable=true"
+      # services : csgo_service1  -------------------------
+      - "traefik.tcp.services.csgo_service1.loadbalancer.server.port=${CSGO_GAME_PORT}"
+      # service router : csgo_service1
+      - "traefik.tcp.routers.csgo_service1.entrypoints=${CSGO_SERVICE1_ENTRYPOINTS}"
+      - "traefik.tcp.routers.csgo_service1.rule=HostSNI(`csgo.${TANGO_DOMAIN}`)"
+      - "traefik.tcp.routers.csgo_service1.service=csgo_service1"
+      - "traefik.tcp.routers.csgo_service1.tls=true"
+      - "traefik.tcp.routers.csgo_service1.tls.domains[0].main=csgo.${TANGO_DOMAIN}"
+      - "traefik.tcp.routers.csgo_service1.tls.passthrough=true"
+      # service router middlewares : csgo_service1
+      # services : csgo_service2  -------------------------
+      - "traefik.udp.services.csgo_service2.loadbalancer.server.port=${CSGO_QUERY_PORT}"
+      # service router : csgo_service2
+      - "traefik.udp.routers.csgo_service2.entrypoints=${CSGO_SERVICE2_ENTRYPOINTS}"
+      - "traefik.udp.routers.csgo_service2.service=csgo_service2"
+      # service router middlewares : csgo_service2
+      # sub services : csgo_monitor  -------------------------
+      - "traefik.http.services.csgo_monitor.loadbalancer.server.port=28080"
+      - "traefik.http.services.csgo_monitor.loadbalancer.server.scheme=http"
+      - "traefik.http.services.csgo_monitor.loadbalancer.passhostheader=true"
+      # sub service router : csgo_monitor
+      - "traefik.http.routers.csgo_monitor.entrypoints=${CSGO_MONITOR_ENTRYPOINTS}"
+      - "traefik.http.routers.csgo_monitor.rule=HostRegexp(`{subdomain:${CSGO_SUBDOMAIN:-}}{domain:${TANGO_DOMAIN:-.*}}`)"
+      - "traefik.http.routers.csgo_monitor.priority=${CSGO_MONITOR_PRIORITY}"
+      - "traefik.http.routers.csgo_monitor.service=csgo_monitor"
+      - "traefik.http.routers.csgo_monitor-secure.entrypoints=${CSGO_MONITOR_ENTRYPOINTS_SECURE}"
+      - "traefik.http.routers.csgo_monitor-secure.rule=HostRegexp(`{subdomain:${CSGO_SUBDOMAIN:-}}{domain:${TANGO_DOMAIN:-.*}}`)"
+      - "traefik.http.routers.csgo_monitor-secure.priority=${CSGO_MONITOR_PRIORITY}"
+      - "traefik.http.routers.csgo_monitor-secure.service=csgo_monitor"
+      - "traefik.http.routers.csgo_monitor-secure.tls=true"
+      - "traefik.http.routers.csgo_monitor-secure.tls.domains[0].main=csgo-monitor.${TANGO_DOMAIN}"
+      # sub service router middlewares : csgo_monitor
+      - "traefik.http.routers.csgo_monitor.middlewares=error-middleware"
+      - "traefik.http.routers.csgo_monitor-secure.middlewares=error-middleware"
+    volumes:
+      - csgo_data:/home/linuxgsm
+    networks:
+      - default
+    expose:
+      - ${CSGO_GAME_PORT}/tcp
+      - ${CSGO_QUERY_PORT}/udp
+      - 28080/tcp
+    build:
+      context: https://github.com/StudioEtrange/linuxgsm-docker.git

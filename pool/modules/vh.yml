@@ -1,0 +1,74 @@
+
+volumes:
+  vh_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VH_DATA_PATH}
+    name: ${TANGO_CTX_NAME}_vh_data
+
+services:
+  vh:
+    image: studioetrange/linuxgsm-docker:latest
+    user: ${TANGO_USER_ID:-0}:${TANGO_GROUP_ID:-0}
+    container_name: ${TANGO_CTX_NAME}_vh
+    depends_on: 
+      - service_init
+    restart: unless-stopped
+    environment:
+      # LGSM static settings
+      - LGSM_GAMESERVERNAME=vhserver
+      # set LGSM_DEFAULT_CFG_DIRNAME with folder in https://github.com/GameServerManagers/Game-Server-Configs
+      - LGSM_DEFAULT_CFG_DIRNAME=
+      - LGSM_UPDATEINSTALLSKIP=AUTO
+      # LGSM tunable settings
+      - LGSM_PORT=${VH_LGSM_PORT}
+      - LGSM_SERVERPASSWORD=${VH_LGSM_SERVERPASSWORD}
+      - LGSM_SERVERNAME=${VH_LGSM_SERVERNAME}
+      - LGSM_SAVEDIR=${VH_LGSM_SAVEDIR}
+      - LGSM_PUBLIC=${VH_LGSM_PUBLIC}
+      - LGSM_GAMEWORLD=${VH_LGSM_GAMEWORLD}
+    labels:
+      - "${TANGO_INSTANCE_NAME}.managed=true"
+      - "traefik.enable=true"
+      # services : vh_service1  -------------------------
+      - "traefik.udp.services.vh_service1.loadbalancer.server.port=${VH_GAME_PORT}"
+      # service router : vh_service1
+      - "traefik.udp.routers.vh_service1.entrypoints=${VH_SERVICE1_ENTRYPOINTS}"
+      - "traefik.udp.routers.vh_service1.service=vh_service1"
+      # service router middlewares : vh_service1
+      # services : vh_service2  -------------------------
+      - "traefik.udp.services.vh_service2.loadbalancer.server.port=${VH_QUERY_PORT}"
+      # service router : vh_service2
+      - "traefik.udp.routers.vh_service2.entrypoints=${VH_SERVICE2_ENTRYPOINTS}"
+      - "traefik.udp.routers.vh_service2.service=vh_service2"
+      # service router middlewares : vh_service2
+      # sub services : vh_monitor -------------------------
+      - "traefik.http.services.vh_monitor.loadbalancer.server.port=28080"
+      - "traefik.http.services.vh_monitor.loadbalancer.server.scheme=http"
+      - "traefik.http.services.vh_monitor.loadbalancer.passhostheader=true"
+      # sub service router : vh_monitor
+      - "traefik.http.routers.vh_monitor.entrypoints=${VH_MONITOR_ENTRYPOINTS}"
+      - "traefik.http.routers.vh_monitor.rule=HostRegexp(`{subdomain:${VH_SUBDOMAIN:-}}{domain:${TANGO_DOMAIN:-.*}}`)"
+      - "traefik.http.routers.vh_monitor.priority=${VH_MONITOR_PRIORITY}"
+      - "traefik.http.routers.vh_monitor.service=vh_monitor"
+      - "traefik.http.routers.vh_monitor-secure.entrypoints=${VH_MONITOR_ENTRYPOINTS_SECURE}"
+      - "traefik.http.routers.vh_monitor-secure.rule=HostRegexp(`{subdomain:${VH_SUBDOMAIN:-}}{domain:${TANGO_DOMAIN:-.*}}`)"
+      - "traefik.http.routers.vh_monitor-secure.priority=${VH_MONITOR_PRIORITY}"
+      - "traefik.http.routers.vh_monitor-secure.service=vh_monitor"
+      - "traefik.http.routers.vh_monitor-secure.tls=true"
+      - "traefik.http.routers.vh_monitor-secure.tls.domains[0].main=vh-monitor.${TANGO_DOMAIN}"
+      # sub service router middlewares : vh_monitor
+      - "traefik.http.routers.vh_monitor.middlewares=error-middleware"
+      - "traefik.http.routers.vh_monitor-secure.middlewares=error-middleware"
+    volumes:
+      - vh_data:/home/linuxgsm
+    networks:
+      - default
+    expose:
+      - ${VH_GAME_PORT}/udp
+      - ${VH_QUERY_PORT}/udp
+      - 28080/tcp
+    build:
+      context: https://github.com/StudioEtrange/linuxgsm-docker.git

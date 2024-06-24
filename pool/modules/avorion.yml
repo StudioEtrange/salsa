@@ -1,0 +1,93 @@
+
+volumes:
+  avorion_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${AVORION_DATA_PATH}
+    name: ${TANGO_CTX_NAME}_avorion_data
+
+services:
+  avorion:
+    image: studioetrange/linuxgsm-docker:latest
+    user: ${TANGO_USER_ID:-0}:${TANGO_GROUP_ID:-0}
+    container_name: ${TANGO_CTX_NAME}_avorion
+    depends_on: 
+      - service_init
+    restart: unless-stopped
+    environment:
+      # LGSM static settings
+      - LGSM_GAMESERVERNAME=avserver
+      - LGSM_DEFAULT_CFG_DIRNAME=
+      - LGSM_UPDATEINSTALLSKIP=AUTO
+      # LGSM tunable settings
+      - LGSM_SERVERNAME=${AVORION_LGSM_SERVERNAME}
+      - LGSM_PORT=${AVORION_LGSM_PORT}
+      - LGSM_QUERYPORT=${AVORION_LGSM_QUERYPORT}
+      - LGSM_STEAMQUERYPORT=${AVORION_LGSM_STEAMQUERYPORT}
+      - LGSM_STEAMMASTERPORT=${AVORION_LGSM_STEAMMASTERPORT}
+      - LGSM_SAMESTARTSECTOR=${AVORION_LGSM_SAMESTARTSECTOR}
+      - LGSM_MAXPLAYERS=${AVORION_LGSM_MAXPLAYERS}
+      - LGSM_DIFFICULTY=${AVORION_LGSM_DIFFICULTY}
+      - LGSM_MULTIPLAYER=${AVORION_LGSM_MULTIPLAYER}
+      - LGSM_LISTED=${AVORION_LGSM_LISTED}
+      - LGSM_ADMIN=${AVORION_LGSM_ADMIN}
+      - LGSM_GITHUBUSER=${AVORION_LGSM_GITHUBUSER}
+      - LGSM_GITHUBREPO=${AVORION_LGSM_GITHUBREPO}
+      - LGSM_GITHUBBRANCH=${AVORION_LGSM_GITHUBBRANCH}
+    labels:
+      - "${TANGO_INSTANCE_NAME}.managed=true"
+      - "traefik.enable=true"
+      # services : avorion_service1  -------------------------
+      - "traefik.tcp.services.avorion_service1.loadbalancer.server.port=${AVORION_GAME_PORT}"
+      # service router : avorion_service1
+      - "traefik.tcp.routers.avorion_service1.entrypoints=${AVORION_SERVICE1_ENTRYPOINTS}"
+      - "traefik.tcp.routers.avorion_service1.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.avorion_service1.service=avorion_service1"
+      # NOTE : when activating TLS and using a HostSNI, avorion server is not reachable
+      # service router middlewares : avorion_service1
+      # services : avorion_service2  -------------------------
+      - "traefik.udp.services.avorion_service2.loadbalancer.server.port=${AVORION_GAME_PORT}"
+      # service router : avorion_service2
+      - "traefik.udp.routers.avorion_service2.entrypoints=${AVORION_SERVICE2_ENTRYPOINTS}"
+      - "traefik.udp.routers.avorion_service2.service=avorion_service2"
+      # service router middlewares : avorion_service2
+      # services : avorion_service3  -------------------------
+      - "traefik.udp.services.avorion_service3.loadbalancer.server.port=${AVORION_QUERY_PORT}"
+      # service router : avorion_service2
+      - "traefik.udp.routers.avorion_service3.entrypoints=${AVORION_SERVICE3_ENTRYPOINTS}"
+      - "traefik.udp.routers.avorion_service3.service=avorion_service3"
+      # service router middlewares : avorion_service2
+      # sub services : avorion_monitor -------------------------
+      - "traefik.http.services.avorion_monitor.loadbalancer.server.port=28080"
+      - "traefik.http.services.avorion_monitor.loadbalancer.server.scheme=http"
+      - "traefik.http.services.avorion_monitor.loadbalancer.passhostheader=true"
+      # sub service router : avorion_monitor
+      - "traefik.http.routers.avorion_monitor.entrypoints=${AVORION_MONITOR_ENTRYPOINTS}"
+      - "traefik.http.routers.avorion_monitor.rule=HostRegexp(`{subdomain:${AVORION_SUBDOMAIN:-}}{domain:${TANGO_DOMAIN:-.*}}`)"
+      - "traefik.http.routers.avorion_monitor.priority=${AVORION_MONITOR_PRIORITY}"
+      - "traefik.http.routers.avorion_monitor.service=avorion_monitor"
+      - "traefik.http.routers.avorion_monitor-secure.entrypoints=${AVORION_MONITOR_ENTRYPOINTS_SECURE}"
+      - "traefik.http.routers.avorion_monitor-secure.rule=HostRegexp(`{subdomain:${AVORION_SUBDOMAIN:-}}{domain:${TANGO_DOMAIN:-.*}}`)"
+      - "traefik.http.routers.avorion_monitor-secure.priority=${AVORION_MONITOR_PRIORITY}"
+      - "traefik.http.routers.avorion_monitor-secure.service=avorion_monitor"
+      - "traefik.http.routers.avorion_monitor-secure.tls=true"
+      - "traefik.http.routers.avorion_monitor-secure.tls.domains[0].main=avorion-monitor.${TANGO_DOMAIN}"
+      # sub service router middlewares : avorion_monitor
+      - "traefik.http.routers.avorion_monitor.middlewares=error-middleware"
+      - "traefik.http.routers.avorion_monitor-secure.middlewares=error-middleware"
+    volumes:
+      - avorion_data:/home/linuxgsm
+    networks:
+      - default
+    expose:
+      # Monitor port
+      - 28080/tcp
+      # game ports
+      - ${AVORION_GAME_PORT}/tcp
+      - ${AVORION_GAME_PORT}/udp
+      # query port
+      - ${AVORION_QUERY_PORT}/udp
+    build:
+      context: https://github.com/StudioEtrange/linuxgsm-docker.git

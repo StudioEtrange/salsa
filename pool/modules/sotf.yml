@@ -1,0 +1,67 @@
+
+volumes:
+  sotf_data_game:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${SOTF_DATA_GAME_PATH}
+    name: ${TANGO_CTX_NAME}_sotf_data_game
+  sotf_data_steamcmd:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${SOTF_DATA_STEAMCMD_PATH}
+    name: ${TANGO_CTX_NAME}_sotf_data_steamcmd
+  sotf_data_winedata:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${SOTF_DATA_WINEDATA_PATH}
+    name: ${TANGO_CTX_NAME}_sotf_data_winedata
+
+services:
+  sotf:
+    image: jammsen/sons-of-the-forest-dedicated-server:latest
+    user: ${TANGO_USER_ID:-0}:${TANGO_GROUP_ID:-0}
+    container_name: ${TANGO_CTX_NAME}_sotf
+    depends_on: 
+      - service_init
+    restart: unless-stopped
+    environment:
+      - ALWAYS_UPDATE_ON_START=1
+    tty: true
+    stdin_open: true
+    labels:
+      - "${TANGO_INSTANCE_NAME}.managed=true"
+      - "traefik.enable=true"
+      # services : sotf_service1  -------------------------
+      - "traefik.ucp.services.sotf_service1.loadbalancer.server.port=${SOTF_GAME_PORT1}"
+      # service router : sotf_service1
+      - "traefik.udp.routers.sotf_service2.entrypoints=${SOTF_SERVICE1_ENTRYPOINTS}"
+      - "traefik.udp.routers.sotf_service1.service=sotf_service1"
+      # service router middlewares : sotf_service1
+      # services : sotf_service2  -------------------------
+      - "traefik.udp.services.sotf_service2.loadbalancer.server.port=${SOTF_GAME_PORT2}"
+      # service router : sotf_service2
+      - "traefik.udp.routers.sotf_service2.entrypoints=${SOTF_SERVICE2_ENTRYPOINTS}"
+      - "traefik.udp.routers.sotf_service2.service=sotf_service2"
+      # service router middlewares : sotf_service2
+      # services : sotf_service3  -------------------------
+      - "traefik.udp.services.sotf_service3.loadbalancer.server.port=${SOTF_GAME_PORT3}"
+      # service router : sotf_service3
+      - "traefik.udp.routers.sotf_service3.entrypoints=${SOTF_SERVICE3_ENTRYPOINTS}"
+      - "traefik.udp.routers.sotf_service3.service=sotf_service3"
+      # service router middlewares : sotf_service2
+    volumes:
+      - sotf_data_steamcmd:/steamcmd
+      - sotf_data_game:/sonsoftheforest
+      - sotf_data_winedata:/winedata
+    networks:
+      - default
+    expose:
+      - ${SOTF_GAME_PORT1}/ucp
+      - ${SOTF_GAME_PORT2}/udp
+      - ${SOTF_GAME_PORT3}/udp

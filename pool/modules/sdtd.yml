@@ -1,0 +1,99 @@
+volumes:
+  sdtd_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${SDTD_DATA_PATH}
+    name: ${TANGO_CTX_NAME}_sdtd_data
+
+
+services:
+  sdtd:
+    image: studioetrange/linuxgsm-docker:latest
+    user: ${TANGO_USER_ID:-0}:${TANGO_GROUP_ID:-0}
+    container_name: ${TANGO_CTX_NAME}_sdtd
+    depends_on: 
+      - service_init
+    restart: unless-stopped
+    environment:
+      # LGSM settings
+      - LGSM_GAMESERVERNAME=sdtdserver
+      - LGSM_DEFAULT_CFG_DIRNAME=7DaysToDie
+      - LGSM_UPDATEINSTALLSKIP=AUTO
+      - LGSM_SERVERCFGFULLPATH=/home/linuxgsm/linuxgsm/lgsm/config-default/config-game/7DaysToDie/serverconfig.xml
+      # Game settings
+      # https://github.com/GameServerManagers/LinuxGSM/blob/master/lgsm/config-default/config-lgsm/sdtdserver/_default.cfg
+      # - LGSM_PORT=${SDTD_GAME_PORT}
+      # - LGSM_SERVER_VISIBILITY=2
+      # - LGSM_SERVER_NAME=LGSM Salsa server
+      # - LGSM_GAME_NAME=My Game
+      # - LGSM_WORLD_GEN_SEED=ChangeMe
+      # - LGSM_GAME_WORLD=RWG
+      # - LGSM_SERVER_PASSWORD=salsa
+    labels:
+      - "${TANGO_INSTANCE_NAME}.managed=true"
+      - "traefik.enable=true"
+      # services : sdtd
+      #- "traefik.tcp.services.sdtd-tcp.loadbalancer.server.port=${SDTD_GAME_PORT}"
+      - "traefik.udp.services.sdtd-udp.loadbalancer.server.port=${SDTD_GAME_PORT}"
+      # service router : sdtd game udp
+      - "traefik.udp.routers.sdtd_service1.entrypoints=${SDTD_SERVICE1_ENTRYPOINTS}"
+      - "traefik.udp.routers.sdtd_service1.service=sdtd-udp"
+      # middlewares : sdtd
+      # # service router : sdtd game tcp
+      # - "traefik.tcp.routers.sdtd_service1.entrypoints=${SDTD_SERVICE1_ENTRYPOINTS}"
+      # - "traefik.tcp.routers.sdtd_service1.rule=HostSNI(`sdtd.${TANGO_DOMAIN}`)"
+      # #- "traefik.tcp.routers.sdtd_service1.rule=HostSNI(`*`)"
+      # - "traefik.tcp.routers.sdtd_service1.service=sdtd-tcp"
+      # - "traefik.tcp.routers.sdtd_service1.tls=true"
+      # - "traefik.tcp.routers.sdtd_service1.tls.domains[0].main=sdtd.${TANGO_DOMAIN}"
+      # - "traefik.tcp.routers.sdtd_service1.tls.passthrough=true"
+      # service router middlewares : sdtd
+      # -------------- sdtd_monitor -------------------------
+      # sub services : sdtd_monitor
+      - "traefik.http.services.sdtd_monitor.loadbalancer.server.port=28080"
+      - "traefik.http.services.sdtd_monitor.loadbalancer.server.scheme=http"
+      - "traefik.http.services.sdtd_monitor.loadbalancer.passhostheader=true"
+      # sub service router : sdtd_monitor
+      - "traefik.http.routers.sdtd_monitor.entrypoints=${SDTD_MONITOR_ENTRYPOINTS}"
+      - "traefik.http.routers.sdtd_monitor.rule=HostRegexp(`{subdomain:${SDTD_SUBDOMAIN:-}}{domain:${TANGO_DOMAIN:-.*}}`)"
+      - "traefik.http.routers.sdtd_monitor.priority=${SDTD_MONITOR_PRIORITY}"
+      - "traefik.http.routers.sdtd_monitor.service=sdtd_monitor"
+      - "traefik.http.routers.sdtd_monitor-secure.entrypoints=${SDTD_MONITOR_ENTRYPOINTS_SECURE}"
+      - "traefik.http.routers.sdtd_monitor-secure.rule=HostRegexp(`{subdomain:${SDTD_SUBDOMAIN:-}}{domain:${TANGO_DOMAIN:-.*}}`)"
+      - "traefik.http.routers.sdtd_monitor-secure.priority=${SDTD_MONITOR_PRIORITY}"
+      - "traefik.http.routers.sdtd_monitor-secure.service=sdtd_monitor"
+      - "traefik.http.routers.sdtd_monitor-secure.tls=true"
+      - "traefik.http.routers.sdtd_monitor-secure.tls.domains[0].main=sdtd-monitor.${TANGO_DOMAIN}"
+      # sub service router middlewares : sdtd_monitor
+      - "traefik.http.routers.sdtd_monitor.middlewares=error-middleware"
+      - "traefik.http.routers.sdtd_monitor-secure.middlewares=error-middleware"
+      # sub services : sdtd_admin
+      - "traefik.http.services.sdtd_admin.loadbalancer.server.port=8080"
+      - "traefik.http.services.sdtd_admin.loadbalancer.server.scheme=http"
+      - "traefik.http.services.sdtd_admin.loadbalancer.passhostheader=true"
+      # sub service router : sdtd_admin
+      - "traefik.http.routers.sdtd_admin.entrypoints=${SDTD_ADMIN_ENTRYPOINTS}"
+      - "traefik.http.routers.sdtd_admin.rule=HostRegexp(`sdtd-admin.${TANGO_DOMAIN}`)"
+      - "traefik.http.routers.sdtd_admin.priority=${SDTD_ADMIN_PRIORITY}"
+      - "traefik.http.routers.sdtd_admin.service=sdtd_admin"
+      - "traefik.http.routers.sdtd_admin-secure.entrypoints=${SDTD_ADMIN_ENTRYPOINTS_SECURE}"
+      - "traefik.http.routers.sdtd_admin-secure.rule=HostRegexp(`sdtd-admin.${TANGO_DOMAIN}`)"
+      - "traefik.http.routers.sdtd_admin-secure.priority=${SDTD_ADMIN_PRIORITY}"
+      - "traefik.http.routers.sdtd_admin-secure.service=sdtd_admin"
+      - "traefik.http.routers.sdtd_admin-secure.tls=true"
+      - "traefik.http.routers.sdtd_admin-secure.tls.domains[0].main=sdtd-monitor.${TANGO_DOMAIN}"
+      # sub service router middlewares : sdtd_admin
+      - "traefik.http.routers.sdtd_admin.middlewares=error-middleware"
+      - "traefik.http.routers.sdtd_admin-secure.middlewares=error-middleware"
+    volumes:
+      - sdtd_data:/home/linuxgsm
+    networks:
+      - default
+    expose:
+      - ${SDTD_GAME_PORT}
+      - 28080
+      - 8080
+    build:
+      context: https://github.com/StudioEtrange/linuxgsm-docker.git

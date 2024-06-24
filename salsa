@@ -1,0 +1,53 @@
+#!/bin/bash
+_CURRENT_FILE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+_CURRENT_RUNNING_DIR="$( cd "$( dirname "." )" && pwd )"
+
+
+
+# INIT TANGO -------------------
+# TANGO lookup order
+#       1. TANGO_ROOT is defined externally ==> instance mode : isolated or shared
+#       2. "${_CURRENT_FILE_DIR}/../tango"  ==> instance mode : isolated or shared
+#       3. "${_CURRENT_FILE_DIR}/tango"                    ==> instance mode : isolated only. shared instance is not compatible with this location
+INTERNAL_TANGO_ROOT="${_CURRENT_FILE_DIR}/tango"
+INSTANCE_MODE_SHARED_OK=
+if [ "${TANGO_ROOT}" = "" ]; then
+    if [ -d "${_CURRENT_FILE_DIR}/../tango" ]; then
+        TANGO_ROOT="${_CURRENT_FILE_DIR}/../tango"
+        INSTANCE_MODE_SHARED_OK=1
+    else
+        # use internal tango
+        TANGO_ROOT="${INTERNAL_TANGO_ROOT}"
+    fi
+else
+    TANGO_ROOT="$(cd "${TANGO_ROOT}" && pwd -P)"
+    [ ! "${TANGO_ROOT}" = "${INTERNAL_TANGO_ROOT}" ] && INSTANCE_MODE_SHARED_OK=1
+fi
+
+if [ ! -d "${TANGO_ROOT}" ]; then
+    echo "* ERROR tango not found, by default it is first lookup into ${_CURRENT_FILE_DIR}/../tango OR defined its path with TANGO_ROOT"
+    exit 1
+fi
+
+echo "Detected TANGO framework in ${TANGO_ROOT}"
+
+case $1 in
+    lgsm)
+        case $2 in
+            build)
+                docker build -t studioetrange/linuxgsm-docker:latest https://github.com/StudioEtrange/linuxgsm-docker.git
+            ;;
+
+            *)
+                "${TANGO_ROOT}/tango" --ctx salsa --ctxroot ${_CURRENT_FILE_DIR} exec $2 --module $2 -- /home/linuxgsm/linuxgsm/lgsm-gameserver $3
+            ;;
+        esac
+    ;;
+
+    *)
+        "${TANGO_ROOT}/tango" --ctx salsa --ctxroot ${_CURRENT_FILE_DIR} $@
+    ;;
+
+esac
+
+ 
