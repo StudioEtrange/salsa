@@ -1,33 +1,29 @@
 
-<!-- TOC -->
 
 - [Video Games](#video-games)
-    - [Game servers](#game-servers)
-    - [Tools & links](#tools--links)
-    - [Storage](#storage)
-    - [Complete retrogaming distribution](#complete-retrogaming-distribution)
-    - [Game Streaming](#game-streaming)
-    - [Emulators](#emulators)
-    - [Web Emulators](#web-emulators)
-    - [Web launcher](#web-launcher)
-    - [Website running emulators](#website-running-emulators)
-    - [Emulator frontend](#emulator-frontend)
-    - [Emulation : Rom manager](#emulation--rom-manager)
-    - [Emulation : Rom database](#emulation--rom-database)
-    - [Scrapper](#scrapper)
-    - [Emulation : Rom NOTES](#emulation--rom-notes)
-    - [Emulation : Roms](#emulation--roms)
+  - [Game servers](#game-servers)
+  - [Tools \& links](#tools--links)
+  - [Storage](#storage)
+  - [Complete retrogaming distribution](#complete-retrogaming-distribution)
+  - [Game Streaming](#game-streaming)
+  - [Emulators](#emulators)
+  - [Web Emulators](#web-emulators)
+  - [Web launcher](#web-launcher)
+  - [Website running emulators](#website-running-emulators)
+  - [Emulator frontend](#emulator-frontend)
+  - [Emulation : Rom manager](#emulation--rom-manager)
+  - [Emulation : Rom database](#emulation--rom-database)
+  - [Scrapper](#scrapper)
+  - [Emulation : Rom NOTES](#emulation--rom-notes)
+  - [Emulation : Roms](#emulation--roms)
 - [Physical games](#physical-games)
-    - [board games](#board-games)
-    - [card games](#card-games)
-
-<!-- /TOC -->
-
+  - [board games](#board-games)
+  - [card games](#card-games)
 
 # Video Games
 
 
-## Game servers
+## Game multiplayer servers
 
 * Sample traefik minecraft server : https://community.traefik.io/t/how-to-reverse-proxy-a-minecraft-bedrock-server/6110
 
@@ -102,7 +98,7 @@
 * Retropie
     * built primarly for raspberrypi
     * build ontop of raspbian - can be installed as package (instead of a full distro)
-    * distribution emulation with EmulationStation (default frontend) + Retroarch + Others emulators
+    * distribution emulation with (ES) (default frontend) + Retroarch + Others emulators
     * harder and more configurable than recalbox or batocera
     * https://retropie.org.uk/
     * https://github.com/RetroPie
@@ -145,25 +141,26 @@
 
 ## Game Streaming
 
-* moonlight
+* moonlight [streaming client]
     * https://moonlight-stream.org/
     * https://github.com/moonlight-stream
     * open source implementation nvidia gamestream protocol
     * client android, iOS , win, linux,Mac, web chrome, PS Vita, raspberry Pi
     * non multitenant
+    * LG webos client : https://github.com/mariotaku/moonlight-tv
 
 * parsec
-    * https://parsecgaming.com/ 
-    * https://github.com/parsec-cloud/web-client
+    * non free
+    * https://parsec.app/
+    * https://github.com/parsec-cloud/
     * stream a game from a PC
     * client mac/win/linux/web
     * server Hosting is only available for Windows 8.1+
     * use H265 for encoding video
     * setup with VM on unraid and parsec : https://www.reddit.com/r/unRAID/comments/d2fgv8/my_experience_with_cloud_gaming_and_an_allinone/
 
-* rainway
+* rainway [ABANDONNED]
     * https://github.com/RainwayApp
-    * https://rainway.com
     * server windows 10
     * client web https://play.rainway.com/
     * multitenant : non
@@ -173,24 +170,37 @@
     * plex plugin
     * stream game from a windows server to plex client
     * support openstream and sunshine and geforce experience for streaming technologies
-    * https://retroarcher.github.io/
     * RetroArcher metadata plugin for Plex : https://github.com/LizardByte/RetroArcher-plex
     * Game streaming server / front-end : https://github.com/LizardByte/RetroArcher
 
-
-* sunshine
+* sunshine [SEEMS A GOOD CHOICE]
     * https://github.com/LizardByte/Sunshine
+    * https://app.lizardbyte.dev/Sunshine/?lng=en
     * old : https://github.com/loki-47-6F-64/sunshine
-    * sunshine is a host server for moonlight streaming client
+    * sunshine is a host server for moonlight streaming client. Self-hosted game stream host for Moonlight.
     * it replaces NVIDIA GameStream
     * https://www.reddit.com/r/pcgaming/comments/zoytbv/comment/j0qqpmp/
-    * a dockerized version with HW support : GOW
-        * https://github.com/games-on-whales/gow 
-        * https://games-on-whales.github.io/gow/
-        * https://www.reddit.com/r/docker/comments/o4tz1c/gaming_on_a_server_running_retroarch_on_docker/
-        * this image can connect other docker image with graphical output (ie : stream firefox docker image)
+      * a dockerized version with HW support : GOW
+        * https://github.com/games-on-whales/gow/tree/master/images/sunshine
 
-* open-stream
+* wolf
+  * alpha Stream virtual desktops and games running in Docker
+  * Wolf is a streaming server for Moonlight that allows you to share a single server with multiple remote clients in order to play videogames!
+  * It's a specific tool for a specific need, are you looking for a general purpose streaming solution? Try out Sunshine!
+  * https://github.com/games-on-whales/wolf
+
+
+* GOW Games on Whales [SEEMS A GOOD CHOICE]
+  * complete system that combine use sunshine or wolf to stream dockerised app using moonlight protocol
+  * https://games-on-whales.github.io/gow/_images/gow-diagram.svg  
+  * A collection of Docker images ready to be used by Wolf or sunshine in order to run games and apps on a remote host!
+  * https://github.com/games-on-whales/gow 
+  * https://games-on-whales.github.io/gow/
+  * https://www.reddit.com/r/docker/comments/o4tz1c/gaming_on_a_server_running_retroarch_on_docker/
+
+
+
+* open-stream [SEEMS A GOOD CHOICE]
     * https://open-stream.net/#
     * use moonlight as client
     * Open Stream is a fork open Sunshine Server. Creating open source solution for Gaming and Desktop Management.
@@ -233,6 +243,20 @@
     * web emulator for dos games
     * https://js-dos.com/
 
+* Scummvm for web
+    * https://github.com/scummvm/scummvm/tree/master/dists/emscripten
+    * demo
+      * https://github.com/chkuendig/scummvm-demo
+      * https://scummvm.kuendig.io/scummvm.html
+
+* retroarch libretro cores web emscript builders
+    * from libretro https://buildbot.libretro.com/stable/1.9.9/emscripten/
+    * from libretro build instruction : https://github.com/libretro/RetroArch/blob/master/pkg/emscripten/README.md
+    * from linuxserver emulatorjs 
+      * https://github.com/thelamer/retrostash
+      * ource to build libretro cores for emulatorjs
+    * from retro-assembly https://github.com/arianrhodsandlot/retro-assembly-vendors
+    * from retro-assembly https://github.com/arianrhodsandlot/retroarch-emscripten-build
 
 ## Web launcher
 
@@ -315,8 +339,8 @@
     * list of games : https://github.com/orgs/Emupedia/repositories?page=1
 
 
-* Web retroarch
-    * based on Retroarch and includes severals core compiled with emscript : https://buildbot.libretro.com/stable/1.9.9/emscripten/
+* retroarch web [SEEMS A GOOD CHOICE]
+    * based on Retroarch and includes severals libretro  compiled with emscript : https://buildbot.libretro.com/stable/1.9.9/emscripten/
     * https://web.libretro.com/
     * retroarch-web
         * https://github.com/Inglebard/dockerfiles/tree/retroarch-web
@@ -325,23 +349,25 @@
     * retroarch web player build instruction : https://github.com/libretro/RetroArch/blob/master/pkg/emscripten/README.md
     * RetroArch web player basic host installation script on docker nginx(ubuntu) https://gist.github.com/jribal/8e73ff1e41aa54a9032f965d82706bf3
 
-* webretro 
+
+* webretro [OLD]
     * RetroArch in your browser
     * RetroArch ported to WebAssembly with emscripten
     * https://github.com/BinBashBanana/webretro
     * demo : https://binbashbanana.github.io/webretro/
 
-* linuxserver emulatorjs (not related to EmulatorJS)
+* linuxserver emulatorjs (not related to EmulatorJS) [SEEMS A GOOD CHOICE]
     * web frontend with libretro js emulator (retroarch)
     * https://github.com/linuxserver/emulatorjs/
     * https://github.com/linuxserver/docker-emulatorjs
     * https://github.com/linuxserver/libretrojs (prepared js library for web site)
-    * source to build libretro cores for emulatorjs : https://github.com/thelamer/retrostash
+    * source to build libretro cores for linuxserver emulatorjs : https://github.com/thelamer/retrostash
 
-* EmulatorJS (not related to linuxserver/emulatorjs)
+
+* EmulatorJS (not related to linuxserver/emulatorjs) [SEEMS A GOOD CHOICE]
     * Self-hosted Javascript emulation for various system
     * Embed an emulator with javascript code into an HTML page
-    * Use retroarch core ?
+    * support only a few old system
     * As an example : Vimmm vault use Emulatorjs https://vimm.net/
     * https://emulatorjs.org/
     * https://github.com/EmulatorJS/EmulatorJS
@@ -350,9 +376,30 @@
 * A web-based collaborative RetroArch frontend
     * https://github.com/ctrlaltf2/lets-play
 
-* A self-hosted game library 
-    * https://github.com/unclebacon-live/cartridge
-    
+
+
+* Retroassembly [SEEMS A GOOD CHOICE]
+    * webfrontend to upload rom and play in browser
+    * https://retroassembly.com/
+    * https://github.com/arianrhodsandlot/retro-assembly
+    * issue : not ready yet for self hosting : 
+      * https://github.com/arianrhodsandlot/retro-assembly/discussions/10
+      * https://hub.docker.com/r/arianrhodsandlot/retro-assembly/tags
+      * can not set a default rom local folder at launch, we have always to use import folder from browser at runtime
+    * based on Nostalgist.js which is built on top of RetroArch Emscripten builds.
+      * https://nostalgist.js.org/
+      * https://github.com/arianrhodsandlot/nostalgist
+
+* webrcade [SEEMS A GOOD CHOICE - BUT NOT FOR MOBILE - OTEHR PB : have specific configured libretro modified cores so difficult to add one]
+    * https://github.com/webrcade/webrcade
+    * WebЯcade consists of an intuitive web-based front end that enables playing popular gaming content entirely within the context of the browser
+    * use modified libretro cores (ex : https://github.com/webrcade/webrcade-app-retro-a5200/tree/main)
+    * https://www.webrcade.com/
+    * https://docs.webrcade.com/
+    * https://play.webrcade.com/
+    * webrcade use "feed". A "feed" is a bundle with emulators configuration and games configuration linked to URL ressources
+    * do not support Touch-based (virtual) gamepad controls ! Mobile gaming impossible !
+
 ## Website running emulators
 
 * Various list
@@ -372,6 +419,14 @@
     * Emularity sofware library for console games : https://archive.org/details/consolelivingroom
 
 
+## Games collection frontend
+
+* gameyfin
+    * Manage your video games.
+    * can download games from gameyfin
+    * https://github.com/gameyfin/gameyfin
+    * scrap data from IGDB
+
 ## Emulator frontend
 
 A frontend is a launcher of emulators
@@ -389,6 +444,7 @@ A frontend is a launcher of emulators
     * proposed in retropie installer
     * do not have any scrapper capability
     * can read metadata format of emulation station, skraper, steam, gog, launchbox, logiqx and its own (pegasus)
+    * docker : https://github.com/games-on-whales/gow/tree/master/images/pegasus
     * Themes
         * Thema list https://pegasus-frontend.org/tools/themes/
         * Theme Switch-like adaptated for Retroid Pocket2 https://github.com/dragoonDorise/RP-Switch
@@ -513,7 +569,19 @@ Currently Used :
     * cli
     * support validation of CHD format
     * support NoIntro and Redump and MAME dat files
+
+* cartridge
+    * A self-hosted game library [OLD]
+    * https://github.com/unclebacon-live/cartridge
     
+* romm [SEEMS A GOOD CHOICE FOR WEB]
+    * web based - A beautiful, powerful, self-hosted rom manager
+    * https://github.com/rommapp/romm
+    * https://romm.app/
+    * embed emulatorjs.org to play roms
+    * https://korben.info/gerer-sa-collection-de-roms-de-jeux-retro-avec-romm-le-manager-ultime.html
+    * have authentification mechanism but do not support SSO https://github.com/rommapp/romm/issues/580
+
 
 
 Not Used :
@@ -632,7 +700,7 @@ Not Used :
 * Skraper 
     * https://www.skraper.net/ 
     * client desktop win/linux/macos
-    * support emulationstation metadata
+    * support emulationstation (ES) metadata
     * use ScreenScraper.fr for games items, need an account for better speed
     * integration with recalbox, retropie and launchbox
     * tutorial (FR) : https://recalbox.gitbook.io/documentation/v/francais/tutoriels/utilitaires/gestion-des-scrappes/skraper-scrapper-ses-roms
@@ -684,6 +752,9 @@ Not Used :
     * https://hub.docker.com/r/iaalm/vassal
     * https://github.com/iaalm/vassal
     * https://github.com/vassalengine/vassal/issues/10948
+
+* table top simulator
+    * games : https://www.nexusmods.com/tabletopsimulator/
 
 ## card games
 
