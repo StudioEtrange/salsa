@@ -1,0 +1,24 @@
+# networks:
+#   dcksocketproxy:
+#     driver: bridge
+#     internal: true
+#     name: ${TANGO_CTX_NAME}_dcksocketproxy
+networks:
+  dcksocketproxy:
+    name: ${TANGO_CTX_NAME}_dcksocketproxy
+
+services:
+  dcksocketproxy:
+    image: ${DCKSOCKETPROXY_IMAGE_FIXED_VAR}:${DCKSOCKETPROXY_VERSION_FIXED_VAR:-latest}
+    container_name: ${TANGO_CTX_NAME}_dcksocketproxy
+    depends_on:
+      - service_init
+    restart: unless-stopped
+    privileged: true
+    user: 0:0
+    environment:
+      - LOG_LEVEL=info
+    labels:
+      - "${TANGO_INSTANCE_NAME}.managed=true"
+    networks:
+      - dcksocketproxy

@@ -3,33 +3,20 @@ _CURRENT_FILE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 _CURRENT_RUNNING_DIR="$( cd "$( dirname "." )" && pwd )"
 
 
+# stella framework log
+[ "$STELLA_LOG_STATE" = "" ] && STELLA_LOG_STATE="OFF"
+[ "$STELLA_LOG_LEVEL" = "" ] && STELLA_LOG_LEVEL="INFO"
+# tangp logs
+[ "$TANGO_LOG_STATE" = "" ] && TANGO_LOG_STATE="ON"
+[ "$TANGO_LOG_LEVEL" = "" ] && TANGO_LOG_LEVEL="INFO"
+# note : $STELLA_API set_log_level_app is not yet available
+STELLA_APP_LOG_STATE="$TANGO_LOG_STATE"
+STELLA_APP_LOG_LEVEL="$TANGO_LOG_LEVEL"
+#export STELLA_LOG_STATE=$STELLA_LOG_STATE
 
-# INIT TANGO -------------------
-# TANGO lookup order
-#       1. TANGO_ROOT is defined externally ==> instance mode : isolated or shared
-#       2. "${_CURRENT_FILE_DIR}/../tango"  ==> instance mode : isolated or shared
-#       3. "${_CURRENT_FILE_DIR}/tango"                    ==> instance mode : isolated only. shared instance is not compatible with this location
-INTERNAL_TANGO_ROOT="${_CURRENT_FILE_DIR}/tango"
-INSTANCE_MODE_SHARED_OK=
-if [ "${TANGO_ROOT}" = "" ]; then
-    if [ -d "${_CURRENT_FILE_DIR}/../tango" ]; then
-        TANGO_ROOT="${_CURRENT_FILE_DIR}/../tango"
-        INSTANCE_MODE_SHARED_OK=1
-    else
-        # use internal tango
-        TANGO_ROOT="${INTERNAL_TANGO_ROOT}"
-    fi
-else
-    TANGO_ROOT="$(cd "${TANGO_ROOT}" && pwd -P)"
-    [ ! "${TANGO_ROOT}" = "${INTERNAL_TANGO_ROOT}" ] && INSTANCE_MODE_SHARED_OK=1
-fi
+. "${_CURRENT_FILE_DIR}/tango-link.sh" "set-tango-root include-stella"
 
-if [ ! -d "${TANGO_ROOT}" ]; then
-    echo "* ERROR tango not found, by default it is first lookup into ${_CURRENT_FILE_DIR}/../tango OR defined its path with TANGO_ROOT"
-    exit 1
-fi
-
-echo "Detected TANGO framework in ${TANGO_ROOT}"
+$STELLA_API log_app "INFO" "salsa" "welcome to salsa"
 
 case $1 in
     lgsm)
@@ -45,7 +32,7 @@ case $1 in
     ;;
 
     *)
-        "${TANGO_ROOT}/tango" --ctx salsa --ctxroot ${_CURRENT_FILE_DIR} $@
+        "${TANGO_ROOT}/tango" --ctx salsa --ctxroot ${_CURRENT_FILE_DIR} $*
     ;;
 
 esac

@@ -2,11 +2,11 @@
 
 *WIP - do not use YET*
 
-A central tool to launch game servers on lin,ux
+A central tool to launch game servers on linux
 
 ## Install
 
-    ```
+    ```x
     cd $HOME
     git clone https://github.com/StudioEtrange/salsa
     cd salsa

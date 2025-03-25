@@ -1,7 +1,7 @@
 
 
 - [Video Games](#video-games)
-  - [Game servers](#game-servers)
+  - [Game multiplayer servers](#game-multiplayer-servers)
   - [Tools \& links](#tools--links)
   - [Storage](#storage)
   - [Complete retrogaming distribution](#complete-retrogaming-distribution)
@@ -10,6 +10,7 @@
   - [Web Emulators](#web-emulators)
   - [Web launcher](#web-launcher)
   - [Website running emulators](#website-running-emulators)
+  - [Games collection frontend](#games-collection-frontend)
   - [Emulator frontend](#emulator-frontend)
   - [Emulation : Rom manager](#emulation--rom-manager)
   - [Emulation : Rom database](#emulation--rom-database)
@@ -183,8 +184,8 @@
       * a dockerized version with HW support : GOW
         * https://github.com/games-on-whales/gow/tree/master/images/sunshine
 
-* wolf
-  * alpha Stream virtual desktops and games running in Docker
+* wolf (alpha)
+  * Stream virtual desktops and games running in Docker
   * Wolf is a streaming server for Moonlight that allows you to share a single server with multiple remote clients in order to play videogames!
   * It's a specific tool for a specific need, are you looking for a general purpose streaming solution? Try out Sunshine!
   * https://github.com/games-on-whales/wolf
@@ -215,12 +216,18 @@
     * NonMAME documents the best open-source emulator for any given system, with priority given to MAME due to its comprehensive scope. This primarily involves arcade, computer, console and handheld systems.
 
 * Ryujinx
-    * https://github.com/Ryujinx/Ryujinx
+    * https://github.com/Ryujinx/Ryujinx [DOWN]
     * switch emulator for win/linux/macos
+    * doc : https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Ryujinx.md
+    * forks : 
+      * https://github.com/Ryubing/Ryujinx [BEST]
+      * https://github.com/ryujinx-mirror/ryujinx
 
 ## Web Emulators
 
-* List of web emulators https://github.com/pengan1987/computer-museum-dnbwg
+* Lists of web emulators 
+    * https://github.com/fcambus/jsemu
+    * https://github.com/pengan1987/computer-museum-dnbwg
 
 * JSMESS Mame 
     * mame javascript
@@ -237,7 +244,7 @@
     
 * Dosee
     * https://github.com/bengarrett/DOSee
-    * web frontend (based on work from emularity) for dos games wjhch embed em-dosbox
+    * web frontend (based on work from emularity) for dos games wich embed em-dosbox
 
 * js-dos
     * web emulator for dos games
@@ -257,6 +264,27 @@
       * ource to build libretro cores for emulatorjs
     * from retro-assembly https://github.com/arianrhodsandlot/retro-assembly-vendors
     * from retro-assembly https://github.com/arianrhodsandlot/retroarch-emscripten-build
+
+
+* crocods
+    * https://crocods.org/web/ https://crazypiri.eu/crocods/
+    * amstrad cpc
+
+* cpcbox
+    * amstrad cpc
+    * https://retroshowcase.gr/cpcbox-master/
+    *  embeded version of amstrad cpc web in portal with game :  https://bzhgames.xyz/index.php
+
+* tiny8bits
+    *  amstrad cpc, commodre, ...
+    *  core emulator : https://github.com/floooh/chips
+    *  A toolbox of 8-bit chip-emulators, helper code and complete embeddable system emulators in dependency-free C headers (a subset of C99 that compiles on gcc, clang and cl.exe).
+    *  sample code : https://github.com/floooh/chips-test
+    *  js wasm version : https://floooh.github.io/tiny8bit/
+    *  embeded version of amstrad cpc web in portals
+       *  https://bzhgames.xyz/index.php
+       *  https://acpc.me/#ACME
+      
 
 ## Web launcher
 
@@ -312,7 +340,7 @@
 
 * Gamejolt
     * https://github.com/gamejolt/gamejolt
-    * a video game web portal - which use Retrojolt
+    * a video game web portal - which use Retrojolt (https://gamejolt.com/)
     * test gamejolt
         ```
         git clone https://github.com/gamejolt/gamejolt
@@ -390,7 +418,7 @@
       * https://nostalgist.js.org/
       * https://github.com/arianrhodsandlot/nostalgist
 
-* webrcade [SEEMS A GOOD CHOICE - BUT NOT FOR MOBILE - OTEHR PB : have specific configured libretro modified cores so difficult to add one]
+* webrcade [SEEMS A GOOD CHOICE - BUT NOT FOR MOBILE - OTHER PB : have specific configured libretro modified cores so difficult to add one]
     * https://github.com/webrcade/webrcade
     * WebЯcade consists of an intuitive web-based front end that enables playing popular gaming content entirely within the context of the browser
     * use modified libretro cores (ex : https://github.com/webrcade/webrcade-app-retro-a5200/tree/main)
@@ -403,6 +431,7 @@
 ## Website running emulators
 
 * Various list
+    * https://bzhgames.xyz/amstrad/dsk/gauntlet.dsk (for amstrad cpc, use tiny8bits cpc and cpcbox)
     * https://www.retrogames.cc/
     * http://emulator.online/ (flash emulator)
     * https://lifehacker.com/the-best-web-sites-to-get-your-retro-gaming-fix-1823765757
@@ -422,9 +451,10 @@
 ## Games collection frontend
 
 * gameyfin
-    * Manage your video games.
-    * can download games from gameyfin
+    * Manage your video games in a web page
+    * can download games from the web page
     * https://github.com/gameyfin/gameyfin
+    * https://hub.docker.com/r/grimsi/gameyfin
     * scrap data from IGDB
 
 ## Emulator frontend
@@ -549,8 +579,10 @@ Currently Used :
     * linux cli utility to manage ROM and manipulate DAT files
     * have a gui (Linux GTK, Windows, and OS X)
 
-* igir
+* igir [GOOD CHOICE]
     * https://github.com/emmercm/igir
+    * A video game ROM collection manager to help filter, sort, patch, archive, and report on collections on any OS.
+    * sample organisation with igir : https://igir.io/usage/personal/ [USE THIS to export rom to different platform (like analog pocket or RomM or adam image for anbernic RG350)]
     * cli only
     * windows linux macos
     * Scan for DATs, ROMs, and ROM patches - including those in archives
@@ -563,10 +595,20 @@ Currently Used :
     * Parse ROMs with headers, and optionally remove them
     * Build & re-build (un-merge, split, or merge) MAME ROM sets
     * Report on what ROMs are present or missing for each console, and create fixdats for missing ROMs
+    * commands
+      * launch with docker
+        ```
+        docker run -it --rm \
+            --volume "$PWD:/pwd" \
+            --workdir "/pwd" \
+            node:lts \
+            npx igir@latest --help
+        ```
 
 * oxyromon
     * https://github.com/alucryd/oxyromon
-    * cli
+    * ROM organizer written in Rust. Like most ROM managers, it checks ROM files against known good databases. It is designed with archiving in mind
+    * Use DAT files
     * support validation of CHD format
     * support NoIntro and Redump and MAME dat files
 
@@ -726,6 +768,7 @@ Not Used :
     * The parent/clone dat format was created for MAME. A "parent" ROM in MAME contains the base or common files for a game, while "clone" ROMs contains only files that are different from the parent. If you load a clone game in MAME, it's smart enough to load the base files from the parent, and any of the modified files it needs from the clone.
     * ROM/Dat manager mode "1G1R" is a mode which uses the parent/clone relationships in a dat to set up a group of related titles. It selects a single title from that group based on your region and language preferences and ignores the other titles, in an effort to produce one specific rom versions.
 
+* 3DS Encrypted / Decrypted ROM : https://www.reddit.com/r/Roms/comments/nfp3qp/comment/kjx49tk/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
 
 * Split / Merged / Non split definition
     * https://wiki.recalbox.com/tutorials/utilities/rom-management/romulus/arcade/romulus1.png

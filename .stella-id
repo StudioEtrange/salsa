@@ -1,0 +1,4 @@
+. $_STELLA_LINK_CURRENT_FILE_DIR/tango-link.sh set-tango-root
+export STELLA_ROOT=$TANGO_ROOT/pool/stella
+STELLA_DEP_FLAVOUR=VENDOR
+STELLA_DEP_VERSION=
