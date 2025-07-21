@@ -46,11 +46,11 @@ services:
       - "traefik.http.services.csgo_monitor.loadbalancer.passhostheader=true"
       # sub service router : csgo_monitor
       - "traefik.http.routers.csgo_monitor.entrypoints=${CSGO_MONITOR_ENTRYPOINTS}"
-      - "traefik.http.routers.csgo_monitor.rule=HostRegexp(`{subdomain:${CSGO_SUBDOMAIN:-}}{domain:${TANGO_DOMAIN:-.*}}`)"
+      - "traefik.http.routers.csgo_monitor.rule=Host(`${CSGO_SUBDOMAIN:-}${TANGO_DOMAIN:-}`)"
       - "traefik.http.routers.csgo_monitor.priority=${CSGO_MONITOR_PRIORITY}"
       - "traefik.http.routers.csgo_monitor.service=csgo_monitor"
       - "traefik.http.routers.csgo_monitor-secure.entrypoints=${CSGO_MONITOR_ENTRYPOINTS_SECURE}"
-      - "traefik.http.routers.csgo_monitor-secure.rule=HostRegexp(`{subdomain:${CSGO_SUBDOMAIN:-}}{domain:${TANGO_DOMAIN:-.*}}`)"
+      - "traefik.http.routers.csgo_monitor-secure.rule=Host(`${CSGO_SUBDOMAIN:-}${TANGO_DOMAIN:-}`)"
       - "traefik.http.routers.csgo_monitor-secure.priority=${CSGO_MONITOR_PRIORITY}"
       - "traefik.http.routers.csgo_monitor-secure.service=csgo_monitor"
       - "traefik.http.routers.csgo_monitor-secure.tls=true"

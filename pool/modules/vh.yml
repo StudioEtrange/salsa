@@ -50,11 +50,11 @@ services:
       - "traefik.http.services.vh_monitor.loadbalancer.passhostheader=true"
       # sub service router : vh_monitor
       - "traefik.http.routers.vh_monitor.entrypoints=${VH_MONITOR_ENTRYPOINTS}"
-      - "traefik.http.routers.vh_monitor.rule=HostRegexp(`{subdomain:${VH_SUBDOMAIN:-}}{domain:${TANGO_DOMAIN:-.*}}`)"
+      - "traefik.http.routers.vh_monitor.rule=Host(`${VH_SUBDOMAIN:-}${TANGO_DOMAIN:-}`)"
       - "traefik.http.routers.vh_monitor.priority=${VH_MONITOR_PRIORITY}"
       - "traefik.http.routers.vh_monitor.service=vh_monitor"
       - "traefik.http.routers.vh_monitor-secure.entrypoints=${VH_MONITOR_ENTRYPOINTS_SECURE}"
-      - "traefik.http.routers.vh_monitor-secure.rule=HostRegexp(`{subdomain:${VH_SUBDOMAIN:-}}{domain:${TANGO_DOMAIN:-.*}}`)"
+      - "traefik.http.routers.vh_monitor-secure.rule=Host(`${VH_SUBDOMAIN:-}${TANGO_DOMAIN:-}`)"
       - "traefik.http.routers.vh_monitor-secure.priority=${VH_MONITOR_PRIORITY}"
       - "traefik.http.routers.vh_monitor-secure.service=vh_monitor"
       - "traefik.http.routers.vh_monitor-secure.tls=true"

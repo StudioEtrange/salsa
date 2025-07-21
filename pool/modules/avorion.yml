@@ -65,11 +65,11 @@ services:
       - "traefik.http.services.avorion_monitor.loadbalancer.passhostheader=true"
       # sub service router : avorion_monitor
       - "traefik.http.routers.avorion_monitor.entrypoints=${AVORION_MONITOR_ENTRYPOINTS}"
-      - "traefik.http.routers.avorion_monitor.rule=HostRegexp(`{subdomain:${AVORION_SUBDOMAIN:-}}{domain:${TANGO_DOMAIN:-.*}}`)"
+      - "traefik.http.routers.avorion_monitor.rule=Host(`${AVORION_SUBDOMAIN:-}${TANGO_DOMAIN:-}`)"
       - "traefik.http.routers.avorion_monitor.priority=${AVORION_MONITOR_PRIORITY}"
       - "traefik.http.routers.avorion_monitor.service=avorion_monitor"
       - "traefik.http.routers.avorion_monitor-secure.entrypoints=${AVORION_MONITOR_ENTRYPOINTS_SECURE}"
-      - "traefik.http.routers.avorion_monitor-secure.rule=HostRegexp(`{subdomain:${AVORION_SUBDOMAIN:-}}{domain:${TANGO_DOMAIN:-.*}}`)"
+      - "traefik.http.routers.avorion_monitor-secure.rule=Host(`${AVORION_SUBDOMAIN:-}${TANGO_DOMAIN:-}`)"
       - "traefik.http.routers.avorion_monitor-secure.priority=${AVORION_MONITOR_PRIORITY}"
       - "traefik.http.routers.avorion_monitor-secure.service=avorion_monitor"
       - "traefik.http.routers.avorion_monitor-secure.tls=true"

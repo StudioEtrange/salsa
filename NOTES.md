@@ -9,6 +9,7 @@
   - [Emulators](#emulators)
   - [Web Emulators](#web-emulators)
   - [Web launcher](#web-launcher)
+  - [Game Launcher](#game-launcher)
   - [Website running emulators](#website-running-emulators)
   - [Games collection frontend](#games-collection-frontend)
   - [Emulator frontend](#emulator-frontend)
@@ -50,6 +51,7 @@
     * Easy-wi
         * https://easy-wi.com/
         * https://github.com/easy-wi/developer
+        * Gameserver, Voiceserver Webinterface
     * Pterodactyl Panel
         * https://pterodactyl.io/
         * https://github.com/pterodactyl/panel
@@ -408,7 +410,9 @@
 
 * Retroassembly [SEEMS A GOOD CHOICE]
     * webfrontend to upload rom and play in browser
-    * https://retroassembly.com/
+    * https://retroassembly.com/ 
+      * old version not maintened : "classic" : https://classic.retroassembly.com/
+      * new version : "next" : https://next.retroassembly.com/
     * https://github.com/arianrhodsandlot/retro-assembly
     * issue : not ready yet for self hosting : 
       * https://github.com/arianrhodsandlot/retro-assembly/discussions/10
@@ -427,6 +431,18 @@
     * https://play.webrcade.com/
     * webrcade use "feed". A "feed" is a bundle with emulators configuration and games configuration linked to URL ressources
     * do not support Touch-based (virtual) gamepad controls ! Mobile gaming impossible !
+
+## Game Launcher
+
+* Heroic
+  * A games launcher for GOG, Amazon and Epic Games for Linux, Windows and macOS.
+  * https://heroicgameslauncher.com/
+  * https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher
+
+* Whisky [ABANDONNED]
+  * Wine wrapper for macos
+  * https://github.com/Whisky-App/Whisky
+  * https://getwhisky.app/
 
 ## Website running emulators
 
@@ -617,14 +633,28 @@ Currently Used :
     * https://github.com/unclebacon-live/cartridge
     
 * romm [SEEMS A GOOD CHOICE FOR WEB]
-    * web based - A beautiful, powerful, self-hosted rom manager
+    * web based - A beautiful, powerful, self-hosted rom manager and player.
     * https://github.com/rommapp/romm
     * https://romm.app/
     * embed emulatorjs.org to play roms
     * https://korben.info/gerer-sa-collection-de-roms-de-jeux-retro-avec-romm-le-manager-ultime.html
     * have authentification mechanism but do not support SSO https://github.com/rommapp/romm/issues/580
+    * compatible to use with MuOS(MustardOS) https://github.com/MustardOS a custom firmware for handled like anbernic device
+    * compatible to use with playnite for windows (a gamelauncher)
+    * can use rom file hash from hasheous https://github.com/gaseous-project/hasheous for identification
+
+* gaseous-server [SEEMS A GOOD CHOICE FOR WEB]
+    * web based
+    * [Gaseous system.](https://github.com/gaseous-project/gaseous-server)
+    * A game ROM manager, with a built in web based emulator using multiple sources to identify and provide metadata
+    * support Dat files
+    * embed emulatorjs.org to play roms
+    * can use rom file hash from hasheous https://github.com/gaseous-project/hasheous for identification (hasheous is from same project)
 
 
+* retrom
+    * https://github.com/JMBeresford/retrom
+    * A centralized game library/collection management service with a focus on emulation
 
 Not Used :
 
