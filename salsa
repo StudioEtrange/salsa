@@ -29,13 +29,13 @@ case $1 in
             ;;
 
             *)
-                "${TANGO_ROOT}/tango" --ctx salsa --ctxroot ${_CURRENT_FILE_DIR} exec $2 --module $2 -- /home/linuxgsm/linuxgsm/lgsm-gameserver $3
+                "${TANGO_ROOT}/tango" --ctx salsa --ctxroot "${_CURRENT_FILE_DIR}" exec $2 --module $2 -- /home/linuxgsm/linuxgsm/lgsm-gameserver $3
             ;;
         esac
     ;;
 
     *)
-        "${TANGO_ROOT}/tango" --ctx salsa --ctxroot ${_CURRENT_FILE_DIR} $*
+        "${TANGO_ROOT}/tango" --ctx salsa --ctxroot "${_CURRENT_FILE_DIR}" $*
     ;;
 
 esac
